@@ -17,3 +17,7 @@ export const CATEGORY_EMOJIS: Record<string, string> = {
 export function getCategoryEmoji(category: string): string {
   return CATEGORY_EMOJIS[category] || "📦";
 }
+
+export function registerCategoryEmoji(category: string, emoji: string): void {
+  CATEGORY_EMOJIS[category] = emoji;
+}
