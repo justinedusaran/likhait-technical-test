@@ -42,3 +42,7 @@ export interface DayExpenses {
   expenses: Expense[];
   total: number;
 }
+
+export interface Category {
+  name: string;
+}

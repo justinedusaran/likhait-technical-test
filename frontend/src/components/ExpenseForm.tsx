@@ -2,11 +2,12 @@
  * Form component for adding/editing expenses
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ExpenseFormData } from "../types";
 import { EXPENSE_CATEGORIES } from "../constants/categories";
 import { TextField, SelectBox, Button } from "../vibes";
 import { useExpenseForm } from "../hooks/useExpenseForm";
+import { fetchCategories } from "../services/api";
 
 interface ExpenseFormProps {
   initialData?: Partial<ExpenseFormData>;
@@ -22,10 +23,22 @@ export function ExpenseForm({
   submitLabel = "Add Expense",
 }: ExpenseFormProps) {
   const { formData, errors, isSubmitting, handleChange, handleSubmit } =
-    useExpenseForm({
-      initialData,
-      onSubmit,
+    useExpenseForm({ initialData, onSubmit });
+
+  const [categoryOptions, setCategoryOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  useEffect(() => {
+    fetchCategories().then((cats) => {
+      const backendNames = cats.map((c) => c.name);
+      const merged = [
+        ...EXPENSE_CATEGORIES.filter((c) => !backendNames.includes(c)),
+        ...backendNames,
+      ];
+      setCategoryOptions(merged.map((c) => ({ value: c, label: c })));
     });
+  }, []);
 
   const formStyle: React.CSSProperties = {
     display: "flex",
@@ -38,11 +51,6 @@ export function ExpenseForm({
     gap: "0.5rem",
     marginTop: "0.5rem",
   };
-
-  const categoryOptions = EXPENSE_CATEGORIES.map((category) => ({
-    value: category,
-    label: category,
-  }));
 
   return (
     <form onSubmit={handleSubmit} style={formStyle}>

@@ -6,6 +6,7 @@ import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
 import { CalendarExpenseTable } from "../components/CalendarExpenseTable";
 import { ExpenseForm } from "../components/ExpenseForm";
+import { AddCategoryModal } from "../components/AddCategoryModal";
 import { Modal, Button } from "../vibes";
 import { COLORS } from "../constants/colors";
 
@@ -13,6 +14,7 @@ const HistoryPage: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
 
   // Get year and month from URL params, default to current date if not provided
   const getInitialYearMonth = () => {
@@ -148,9 +150,14 @@ const HistoryPage: React.FC = () => {
             onYearChange={handleYearChange}
           />
         </div>
-        <Button variant="primary" onClick={() => setIsModalOpen(true)}>
-          Add Expense
-        </Button>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <Button variant="primary" onClick={() => setIsAddCategoryOpen(true)}>
+            Add Category
+          </Button>
+          <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+            Add Expense
+          </Button>
+        </div>
       </div>
 
       <MonthNavigation
@@ -189,6 +196,12 @@ const HistoryPage: React.FC = () => {
           onCancel={() => setIsModalOpen(false)}
         />
       </Modal>
+
+      <AddCategoryModal
+        isOpen={isAddCategoryOpen}
+        onClose={() => setIsAddCategoryOpen(false)}
+        onCreated={() => setIsAddCategoryOpen(false)}
+      />
     </div>
   );
 };
